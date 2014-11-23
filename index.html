@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>PQGrid with PHP</title>
+<!--jQuery dependencies-->
+<link rel="stylesheet" href="jquery-ui-1.11.2.custom/jquery-ui.css" />
+<script src="jquery-ui-1.11.2.custom/external/jquery/jquery.js"></script>
+<script src="jquery-ui-1.11.2.custom/jquery-ui.min.js"></script>
+
+<!--PQ Grid files-->
+<link rel="stylesheet" href="pqgrid.min.css" />
+<script src="pqgrid.min.js"></script>
+
+<!--jqueryui touch punch for touch devices-->
+<script src="touch-punch/touch-punch.min.js"></script>
+
+<!--PQ Grid Office theme-->
+<link rel="stylesheet" href="themes/office/pqgrid.css" />
+<style>
+div.pq-grid-title { text-align: center; }
+</style>
+<script>
+$(function () {
+    function pqDatePicker(ui) {
+        var $this = $(this);
+        $this
+            .css({ zIndex: 3, position: "relative" })
+            .datepicker({
+                yearRange: "-20:+0", //20 years prior to present.
+                changeYear: true,
+                changeMonth: true,
+                showButtonPanel: true,
+                onClose: function (evt, ui) {
+                    $(this).focus();
+                }
+            });
+        //default From date
+        $this.filter(".pq-from").datepicker("option", "defaultDate", new Date("01/01/1996"));
+        //default To date
+        $this.filter(".pq-to").datepicker("option", "defaultDate", new Date("12/31/1998"));
+    }
+
+    //define colModel
+    var colM = [
+		{ title: "SKU", width: 100, dataIndx: "sku", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] } },   
+		{ title: "Length", width: 100, dataIndx: "length", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] } },  
+		{ title: "Data Rate", width: 100, dataIndx: "rate", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] } },
+		{ title: "Size", width: 100, dataIndx: "size", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] }},
+		{ title: "Path", width: 100, dataIndx: "path", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] } },
+		{ title: "Cover", width: 100, dataIndx: "cover", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] }},	
+		{ title: "Type", width: 100,  dataIndx: "type", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] } },
+		{ title: "Release Date", width: 130, dataIndx: "publish", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] }},
+		{ title: "Genre", width: 200, dataIndx: "genre", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] } },       
+		{ title: "Comments", width: 100, dataIndx: "comments", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] }},
+		{ title: "Query", width: 100, dataIndx: "query", align: "center",filter: { type: 'textbox', condition: 'begin', listeners: ['change'] } }
+	];
+    //define dataModel
+    var dataModel = {
+        location: "remote",
+        dataType: "JSON",
+        method: "GET",
+        sortIndx: "sku",
+        sortDir: "up",
+        url: "remote.php",
+        //url: "/pro/orders.php",//for PHP
+        getData: function (dataJSON) {
+            return { data: dataJSON.data };
+        }
+
+    }
+    var obj = { width: 1280, height: 600,
+        dataModel: dataModel,
+        colModel: colM,
+		pageModel: { type: 'local', rPP: 20 },
+        editable: true,
+		selectionModel: { type: 'cell' },
+		filterModel: { on: true, mode: "AND", header: true },
+        title: "Data Base Management System",
+        topVisible: true,
+        resizable: true,
+        columnBorders: true,
+		hwrap:false,
+        freezeCols: 1
+    };
+    
+    var $grid = $("#grid_php").pqGrid(obj);
+});
+
+</script>
+</head>
+<body>
+<div id="grid_php" style="margin: 5px auto;"></div>
+</body>
+</html>
